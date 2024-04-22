@@ -1,0 +1,22 @@
+CUDA_VISIBLE_DEVICES=1 python src/train_bash.py \
+--stage sft \
+--model_name_or_path /home/projects/pretrained_models/nlp/gemma-7b-it \
+--do_predict \
+--dataset ai4scup_llmkg_test_v5_task1 \
+--finetuning_type lora \
+--lora_rank 16 \
+--lora_target q_proj,v_proj \
+--output_dir ./output/gemma-7b-it-lora \
+--per_device_eval_batch_size 2 \
+--preprocessing_num_workers 16 \
+--logging_steps 10 \
+--plot_loss \
+--template gemma \
+--overwrite_output_dir \
+--dataset_dir './data' \
+--predict_with_generate \
+--generation_max_length 256 \
+--cutoff_len 2048 \
+--adapter_name_or_path './output/gemma-7b-it-lora/checkpoint-90' \
+--bf16 \
+

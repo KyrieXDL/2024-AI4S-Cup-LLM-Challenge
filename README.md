@@ -11,12 +11,15 @@
 
 <img src="./pics/b_score.png" width="300">
 
-A榜的结果并没有使用到A榜的测试集训练，因此不存在泄漏的问题，但是AB榜的gap还是很大。
+A榜的最优结果并没有使用到A榜的测试集训练，在使用外部数据时也对A榜测试集进行了过滤，因此不存在泄漏的问题，但是AB榜的gap还是很大。
 
+A榜只使用官方提供数据的最优结果如下，可以看到和B榜的gap仍然很大。
+
+<img src="./pics/a_score_2.png" width="300">
 
 ### 算法流程
 
-#### （0）复现环境搭建
+#### （0）环境搭建
 ```sh
 pip install -r requirements.txt
 ```
@@ -30,9 +33,9 @@ task2的额外数据集：[https://github.com/JHnlp/BioCreative-V-CDR-Corpus](ht
 
 task3的额外数据集：[https://github.com/isegura/DDICorpus](https://github.com/isegura/DDICorpus)
 
-执行以下预处理脚本来处理数据：
+执行以下预处理命令来处理数据，一共有4种数据处理方式（data_format=1,2,3,4），下面会作解释：
 ```sh
-sh scripts/process.sh
+python data_preprocess.py --data_format 1
 ```
 
 模板如下（以mistral为例）：
@@ -69,6 +72,8 @@ Note that the possible types of interaction include: 'advise', 'effect', 'int' a
 - **精度**：fp16 or bf16;
 - **多任务**：由于三元组和二元组的提取本身和实体关联较大，所以加入实体提取的任务训练来增强LLM对于医疗相关实体的理解，本项目主要对比了四种方式：（1）直接构造实体提取的prompt和response，和三元组提取的任务一起训练；（2）在（1）的基础上，推理的时候在三元组的输入中添加模型提取的实体信息；（3）将三元组的提取任务拆分为step by step的流程，让模型在一次生成中依次提取实体和三元组（4）模型训练阶段在输入中添加实体信息，并添加（1）中的实体任务，用于在推理时填充输入的实体信息。
 
+由于task3在加入额外数据集之后在A榜表现比较好，所以就没有构造实体任务了。
+
 不同任务的构造模板如下（以mistral为例）：
 ```
 第一种：
@@ -76,7 +81,7 @@ Note that the possible types of interaction include: 'advise', 'effect', 'int' a
 实体template：<s> [INST] ### Abstract ###\n{abstract}\n\n\n### Question ###\n{entity_instruction} [/INST]{entity_response}</s>
 
 第二种：
-推理：<s> [INST] ### Abstract ###\n{abstract}\n\n\n### Entities ###\n{entities}\n\n\n### Question ###\n{triplet_instruction} [/INST]{triplet_response}</s>
+推理：<s> [INST] ### Abstract ###\n{abstract}\n\n\n### Question ###\n{triplet_instruction} [/INST]{triplet_response}</s>
 
 第三种：
 <s> [INST] ### Abstract ###\n{abstract}\n\n\n### Entities ###\n{entities}\n\n\n### Question ###\n{instruction} [/INST]{entity_response}\n{triplet_response}</s>
@@ -106,6 +111,11 @@ dora
 sh scripts/train_mistral_dora_task1.sh 
 sh scripts/train_mistral_dora_task2.sh
 sh scripts/train_mistral_dora_task3.sh
+
+lora-plus
+sh scripts/train_mistral_loraplus_task1.sh 
+sh scripts/train_mistral_loraplus_task2.sh
+sh scripts/train_mistral_loraplus_task3.sh
 
 ```
 

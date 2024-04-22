@@ -1,0 +1,53 @@
+{
+  "ai4scup_llmkg_task1_format1": {
+    "file_name": "train_data_task1_1.json",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "response"
+    }
+  },
+  "ai4scup_llmkg_task2_format1": {
+    "file_name": "train_data_task2_1.json",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "response"
+    }
+  },
+  "ai4scup_llmkg_task3_format1": {
+    "file_name": "train_data_task3_1.json",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "response"
+    }
+  },
+  "ai4scup_llmkg_task1_format4": {
+    "file_name": "train_data_task1_4.json",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "response",
+      "extra": "entity"
+    }
+  },
+  "ai4scup_llmkg_task2_format4": {
+    "file_name": "train_data_task2_4.json",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "response",
+      "extra": "entity"
+    }
+  },
+  "ai4scup_llmkg_task3_format4": {
+    "file_name": "train_data_task3_4.json",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "response",
+      "extra": "entity"
+    }
+  }
+}
